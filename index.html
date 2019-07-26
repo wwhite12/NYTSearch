@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <title>NYTSearch</title>
+</head>
+<body>
+        <div class="jumbotron jumbotron-fluid" style = "background:navy;color:white;text-align: center;">
+                <div class="container">
+                  <h1 class="display-4">New York Times Search</h1>
+                </div>
+              </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                    <div class="card">
+                            <div class="card-body">
+                              <h5 class="card-title" style = "border-bottom: 1px solid black;">Search Parameters</h5>
+                              <form>
+                                    <div class="form-group">
+                                      <label for="exampleFormControlInput1">Search Term</label>
+                                      <input type="email" class="form-control" id="search-term" placeholder="Enter Search Term Here">
+                                    </div>
+                                    <div class="form-group">
+                                      <label for="exampleFormControlSelect1">Number of Records to Retrieve:</label>
+                                      <select class="form-control" id="number-records">
+                                        <option>1</option>
+                                        <option>5</option>
+                                        <option>10</option>
+                                      </select>
+                                    </div>
+                                    <div class="form-group">
+                                            <label for="exampleFormControlInput1">Start Year(Optional)</label>
+                                            <input type="email" class="form-control" id="start-year" placeholder="">
+                                    </div>
+                                    <div class="form-group">
+                                            <label for="exampleFormControlInput1">End Year(Optional)</label>
+                                            <input type="email" class="form-control" id="end-year" placeholder="">
+                                    </div>
+                                    
+                                  </form>
+                              <a href="#" class="card-link" id = "search-button">Search</a>
+                              <a href="#" class="card-link" id = "clear-button">Clear Results</a>
+                            </div>
+                          </div>
+                    
+            </div>
+
+        </div>
+        <div class="row" style = "margin-top: 5px;">
+            <div class="col-12">
+                    <div class="card">
+                            <div class="card-header">
+                              Top Articles
+                            </div>
+                            <div class="card-body" id = "results-here">
+                              
+                            </div>
+                          </div>
+            </div>
+        </div>
+
+
+    </div>
+    <script>
+    //onclick function when search button is clicked
+    $("#search-button").on("click",function(){
+        //user input stored as variables
+        var userSearch = $("#search-term").val();
+        var numberResults = parseInt($("#number-records").val());
+        var startYear = $("#start-year").val();
+        var endYear = $("#end-year").val();
+        
+        var queryURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=K5BdNHfEcBKMuI5jlVMOW1ObMfXA4lbT&q=" + userSearch + "&web" + numberResults;
+        //ajax method to call info from api
+        $.ajax({
+            url: queryURL,
+            method: "GET"
+        }).then(function(results){
+           // console.log(results);
+           //variable to make it easier to access each document in response
+            var answer = results.response.docs;
+            //for loop to iterate through each document
+            for(let i = 0 ;i<numberResults; i++){
+            //creates new <div> and stores in variable
+            var articleDiv = $("<div>");
+            //appends created div and stores it with headline of each article
+            articleDiv.append(answer[i].headline.main);
+            //console.log(articleDiv);
+            //appends results-here div to add articleDiv information to DOM
+            $("#results-here").append(articleDiv);
+            };
+        })
+
+    })
+    </script>
+</body>
+</html>
